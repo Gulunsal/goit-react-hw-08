@@ -1,11 +1,21 @@
 import React from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { addContact } from "../../../redux/contacts/operations";
 import { useDispatch } from "react-redux";
+import { 
+  TextField, 
+  Button, 
+  Box, 
+  Paper, 
+  Typography,
+  Container 
+} from '@mui/material';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 export default function ContactsForm() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+
   const initialValues = {
     name: "",
     number: "",
@@ -13,52 +23,74 @@ export default function ContactsForm() {
 
   const validationSchema = Yup.object({
     name: Yup.string()
-      .matches(/^[a-zA-Z\s]*$/, "Only letters are allowed")
-      .required("Name is Required"),
-    number: Yup.number()
-      .transform((value, originalValue) =>
-        originalValue.trim() === "" ? null : value
-      )
-      .nullable()
-      .required("Number is required")
-      .positive("Number can't be Negative value")
-      .integer(),
+      .matches(/^[a-zA-ZğüşıöçĞÜŞİÖÇ\s]*$/, "Sadece harf kullanılabilir")
+      .required("İsim gerekli"),
+    number: Yup.string()
+      .matches(/^\+?[\d\s-]+$/, "Geçerli bir telefon numarası giriniz")
+      .required("Telefon numarası gerekli"),
   });
 
-  const handleSubmit = (values, {resetForm}) => {
-    dispatch(addContact(values))
+  const handleSubmit = (values, { resetForm }) => {
+    dispatch(addContact(values));
     resetForm();
-  }
+  };
 
   return (
-    <div>
-      <Formik onSubmit={handleSubmit} initialValues={initialValues} validationSchema={validationSchema}>
-        {({ values, handleChange }) => {
-          return (
-            <Form>
-            <div>
-              <Field
-                placeholder="name"
+    <Container maxWidth="sm">
+      <Paper elevation={3} sx={{ p: 4, mt: 4 }}>
+        <Typography variant="h5" component="h2" gutterBottom sx={{ mb: 3 }}>
+          Yeni Kişi Ekle
+        </Typography>
+        
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          {({ values, handleChange, handleBlur, touched, errors }) => (
+            <Box component={Form}>
+              <TextField
+                fullWidth
+                label="İsim"
+                name="name"
                 value={values.name}
                 onChange={handleChange}
-                name="name"
+                onBlur={handleBlur}
+                error={touched.name && Boolean(errors.name)}
+                helperText={touched.name && errors.name}
+                margin="normal"
+                variant="outlined"
               />
-               <ErrorMessage name="name" component="div" />
-            </div>
-            <div>
-              <Field
-                placeholder="number"
+              
+              <TextField
+                fullWidth
+                label="Telefon Numarası"
+                name="number"
                 value={values.number}
                 onChange={handleChange}
-                name="number"
+                onBlur={handleBlur}
+                error={touched.number && Boolean(errors.number)}
+                helperText={touched.number && errors.number}
+                margin="normal"
+                variant="outlined"
+                sx={{ mt: 2 }}
               />
-               <ErrorMessage name="number" component="div" />
-            </div>
-            <button type="submit">Submit</button>
-          </Form>
-          );
-        }}
-      </Formik>
-    </div>
+              
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                size="large"
+                startIcon={<PersonAddIcon />}
+                sx={{ mt: 3 }}
+                fullWidth
+              >
+                Kişi Ekle
+              </Button>
+            </Box>
+          )}
+        </Formik>
+      </Paper>
+    </Container>
   );
 }

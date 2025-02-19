@@ -1,20 +1,23 @@
-import React from "react";
+import { AppBar as MuiAppBar, Toolbar, Typography, Box } from '@mui/material';
 import Navigation from "./Navigation";
 import { useSelector } from "react-redux";
 import AuthNav from "./AuthNav";
 import UserMenu from "./UserMenu";
 
-export default function AppBar() {
+export default function NavBar() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   return (
-    <div className="nav-container">
-      <div className="container">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <MuiAppBar position="static">
+      <Toolbar>
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          Kişi Yönetimi
+        </Typography>
+        <Box>
           <Navigation />
           {isLoggedIn ? <UserMenu /> : <AuthNav />}
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Toolbar>
+    </MuiAppBar>
   );
 }
