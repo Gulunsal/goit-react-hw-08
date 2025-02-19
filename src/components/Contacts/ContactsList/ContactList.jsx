@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchContact } from "../../../redux/contacts/operations";
+import { fetchContact, deleteContact } from "../../../redux/contacts/operations";
 import { selectFilteredContacts } from "../../../redux/contacts/selectors";
 import { 
   List, 
@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PersonIcon from '@mui/icons-material/Person';
-import { deleteContact } from "../../../redux/contacts/operations";
+import { red } from '@mui/material/colors';
 
 export default function ContactList() {
   const filteredContacts = useSelector(selectFilteredContacts);
@@ -33,8 +33,8 @@ export default function ContactList() {
 
   return (
     <Container maxWidth="md">
-      <Paper elevation={3} sx={{ mt: 4, p: 2 }}>
-        <Typography variant="h6" sx={{ p: 2 }}>
+      <Paper elevation={3} sx={{ mt: 4, p: 2, borderRadius: 2 }}>
+        <Typography variant="h6" sx={{ p: 2, color: 'primary.main' }}>
           Kişiler ({filteredContacts?.length || 0})
         </Typography>
         <Divider />
@@ -46,30 +46,40 @@ export default function ContactList() {
                   '&:hover': {
                     backgroundColor: 'rgba(0, 0, 0, 0.04)',
                   },
+                  transition: 'background-color 0.3s',
+                  borderRadius: 1,
                 }}
               >
                 <ListItemAvatar>
-                  <Avatar sx={{ bgcolor: 'primary.main' }}>
-                    <PersonIcon />
+                  <Avatar 
+                    sx={{ 
+                      bgcolor: 'primary.main',
+                      width: 40,
+                      height: 40
+                    }}
+                  >
+                    {contact.name.charAt(0).toUpperCase()}
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText
-                  primary={contact.name}
+                  primary={
+                    <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
+                      {contact.name}
+                    </Typography>
+                  }
                   secondary={contact.number}
-                  primaryTypographyProps={{
-                    variant: 'subtitle1',
-                    fontWeight: 'medium'
-                  }}
                 />
                 <ListItemSecondaryAction>
                   <IconButton 
                     edge="end" 
                     onClick={() => handleDelete(contact.id)}
-                    color="error"
                     sx={{
+                      color: red[400],
                       '&:hover': {
-                        backgroundColor: 'rgba(211, 47, 47, 0.04)',
+                        backgroundColor: red[50],
+                        color: red[700],
                       },
+                      transition: 'all 0.3s'
                     }}
                   >
                     <DeleteIcon />
