@@ -23,8 +23,8 @@ Modern bir kişi yönetim uygulaması. React ve Redux kullanılarak geliştirilm
 1. Projeyi klonlayın:
 
    ```bash
-   git clone https://github.com/gulunsal/contact-manager.git
-   cd contact-manager
+   git clone https://github.com/gulunsal/goit-react-hw-08.git
+   cd goit-react-hw-08
    ```
 
 2. Gerekli paketleri yükleyin:
