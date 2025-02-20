@@ -28,6 +28,8 @@ export default function ContactList() {
   const dispatch = useDispatch();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [contactToDelete, setContactToDelete] = useState(null);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleDeleteClick = (contact) => {
     setContactToDelete(contact);
@@ -53,45 +55,56 @@ export default function ContactList() {
 
   return (
     <>
-      <Paper elevation={3}>
-        <List sx={{ width: '100%' }}>
-          {contacts.map((contact, index) => (
-            <Fade in={true} key={contact.id} timeout={300} style={{ transitionDelay: `${index * 100}ms` }}>
-              <ListItem
-                divider={index !== contacts.length - 1}
-                sx={{
-                  '&:hover': {
-                    backgroundColor: 'rgba(0, 0, 0, 0.04)',
-                  },
-                }}
-              >
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                  <Avatar sx={{ bgcolor: 'primary.main' }}>
-                    {contact.name[0].toUpperCase()}
-                  </Avatar>
-                  <ListItemText
-                    primary={contact.name}
-                    secondary={contact.number}
-                    primaryTypographyProps={{
-                      variant: 'subtitle1',
-                      fontWeight: 500
-                    }}
-                  />
-                </Box>
-                <ListItemSecondaryAction>
-                  <Tooltip title="Sil" arrow>
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={() => handleDeleteClick(contact)}
-                      color="error"
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </Tooltip>
-                </ListItemSecondaryAction>
-              </ListItem>
-            </Fade>
+      <Paper elevation={3} sx={{ p: 2 }}>
+        <List sx={{ 
+          width: '100%',
+          maxWidth: '100%',
+          bgcolor: 'background.paper',
+          '& .MuiListItem-root': {
+            flexDirection: isMobile ? 'column' : 'row',
+            alignItems: isMobile ? 'flex-start' : 'center',
+            py: isMobile ? 2 : 1
+          }
+        }}>
+          {contacts.map((contact) => (
+            <ListItem 
+              key={contact.id}
+              sx={{
+                borderBottom: 1,
+                borderColor: 'divider'
+              }}
+            >
+              <Box sx={{ 
+                display: 'flex', 
+                flexDirection: isMobile ? 'column' : 'row',
+                alignItems: isMobile ? 'flex-start' : 'center',
+                width: '100%',
+                gap: 1
+              }}>
+                <Avatar sx={{ bgcolor: 'primary.main' }}>
+                  {contact.name[0].toUpperCase()}
+                </Avatar>
+                <ListItemText 
+                  primary={contact.name}
+                  secondary={contact.number}
+                  primaryTypographyProps={{
+                    variant: 'subtitle1',
+                    fontWeight: 500
+                  }}
+                />
+              </Box>
+              <ListItemSecondaryAction>
+                <Tooltip title="Sil" arrow>
+                  <IconButton 
+                    edge="end" 
+                    aria-label="delete"
+                    onClick={() => handleDeleteClick(contact)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </Tooltip>
+              </ListItemSecondaryAction>
+            </ListItem>
           ))}
         </List>
       </Paper>

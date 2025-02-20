@@ -41,12 +41,25 @@ export const authAPI = {
   },
 };
 
+axios.interceptors.response.use(
+  response => response,
+  error => {
+    console.error('API Error:', error.response?.data || error.message);
+    return Promise.reject(error);
+  }
+);
+
 // Contacts işlemleri
 export const contactsAPI = {
   // GET /contacts
   async fetchContacts() {
-    const { data } = await axios.get('/contacts');
-    return data;
+    try {
+      const { data } = await axios.get('/contacts');
+      return data;
+    } catch (error) {
+      console.error('Fetch Contacts Error:', error);
+      throw error;
+    }
   },
 
   // POST /contacts
