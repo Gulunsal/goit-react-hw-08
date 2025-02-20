@@ -7,5 +7,14 @@ export default defineConfig({
   base: '/',
   build: {
     sourcemap: true
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://connections-api.goit.global',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
   }
 })

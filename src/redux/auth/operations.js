@@ -1,25 +1,14 @@
-import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-
-axios.defaults.baseURL = 'https://connections-api.herokuapp.com';
-
-const setAuthHeader = token => {
-  axios.defaults.headers.common.Authorization = `Bearer ${token}`;
-};
-
-const clearAuthHeader = () => {
-  axios.defaults.headers.common.Authorization = '';
-};
+import { authAPI, setAuthHeader, clearAuthHeader } from '../../services/api';
 
 export const register = createAsyncThunk(
   'auth/register',
   async (credentials, thunkAPI) => {
     try {
-      const res = await axios.post('/users/signup', credentials);
-      setAuthHeader(res.data.token);
-      return res.data;
+      const data = await authAPI.register(credentials);
+      setAuthHeader(data.token);
+      return data;
     } catch (error) {
-      console.error('Registration error:', error);
       return thunkAPI.rejectWithValue(error.message);
     }
   }
@@ -29,24 +18,26 @@ export const login = createAsyncThunk(
   'auth/login',
   async (credentials, thunkAPI) => {
     try {
-      const res = await axios.post('/users/login', credentials);
-      setAuthHeader(res.data.token);
-      return res.data;
+      const data = await authAPI.login(credentials);
+      setAuthHeader(data.token);
+      return data;
     } catch (error) {
-      console.error('Login error:', error);
-      return thunkAPI.rejectWithValue(error.message);
+      return thunkAPI.rejectWithValue('Giriş başarısız. Email veya şifre hatalı.');
     }
   }
 );
 
-export const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
-  try {
-    await axios.post('/users/logout');
-    clearAuthHeader();
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error.message);
+export const logout = createAsyncThunk(
+  'auth/logout',
+  async (_, thunkAPI) => {
+    try {
+      await authAPI.logout();
+      clearAuthHeader();
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
   }
-});
+);
 
 export const refreshUser = createAsyncThunk(
   'auth/refresh',
@@ -55,13 +46,13 @@ export const refreshUser = createAsyncThunk(
     const persistedToken = state.auth.token;
 
     if (persistedToken === null) {
-      return thunkAPI.rejectWithValue('Unable to fetch user');
+      return thunkAPI.rejectWithValue('Oturum süresi doldu, lütfen tekrar giriş yapın.');
     }
 
     try {
       setAuthHeader(persistedToken);
-      const res = await axios.get('/users/current');
-      return res.data;
+      const data = await authAPI.refresh();
+      return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }

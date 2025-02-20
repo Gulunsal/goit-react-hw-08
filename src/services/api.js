@@ -1,76 +1,86 @@
 import axios from 'axios';
 
-// API'nin temel URL'si
-axios.defaults.baseURL = 'https://connections-api.goit.global';
+const instance = axios.create({
+  baseURL: 'https://connections-api.goit.global',
+});
 
-// Token işlemleri
+// Token işlemleri için helper fonksiyonlar
 export const setAuthHeader = token => {
-  axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+  instance.defaults.headers.common.Authorization = `Bearer ${token}`;
 };
 
 export const clearAuthHeader = () => {
-  axios.defaults.headers.common.Authorization = '';
+  instance.defaults.headers.common.Authorization = '';
 };
 
 // Auth işlemleri
 export const authAPI = {
-  // POST /users/signup
   async register(credentials) {
-    const { data } = await axios.post('/users/signup', credentials);
-    setAuthHeader(data.token);
-    return data;
-  },
-
-  // POST /users/login
-  async login(credentials) {
-    const { data } = await axios.post('/users/login', credentials);
-    setAuthHeader(data.token);
-    return data;
-  },
-
-  // POST /users/logout
-  async logout() {
-    await axios.post('/users/logout');
-    clearAuthHeader();
-  },
-
-  // GET /users/current
-  async refresh() {
-    const { data } = await axios.get('/users/current');
-    return data;
-  },
-};
-
-axios.interceptors.response.use(
-  response => response,
-  error => {
-    console.error('API Error:', error.response?.data || error.message);
-    return Promise.reject(error);
-  }
-);
-
-// Contacts işlemleri
-export const contactsAPI = {
-  // GET /contacts
-  async fetchContacts() {
     try {
-      const { data } = await axios.get('/contacts');
+      const { data } = await instance.post('/users/signup', credentials);
+      setAuthHeader(data.token);
       return data;
     } catch (error) {
-      console.error('Fetch Contacts Error:', error);
-      throw error;
+      throw new Error(error.response?.data?.message || 'Kayıt başarısız');
     }
   },
 
-  // POST /contacts
-  async addContact(contact) {
-    const { data } = await axios.post('/contacts', contact);
-    return data;
+  async login(credentials) {
+    try {
+      const { data } = await instance.post('/users/login', credentials);
+      setAuthHeader(data.token);
+      return data;
+    } catch (error) {
+      console.error('Login API Error:', error.response?.data);
+      throw new Error('Email veya şifre hatalı');
+    }
   },
 
-  // DELETE /contacts/{contactId}
+  async logout() {
+    try {
+      await instance.post('/users/logout');
+      clearAuthHeader();
+    } catch (error) {
+      throw new Error('Çıkış yapılırken hata oluştu');
+    }
+  },
+
+  async refresh() {
+    try {
+      const { data } = await instance.get('/users/current');
+      return data;
+    } catch (error) {
+      throw new Error('Oturum yenilenemedi');
+    }
+  },
+};
+
+// Contacts işlemleri
+export const contactsAPI = {
+  async fetchContacts() {
+    try {
+      const { data } = await instance.get('/contacts');
+      return data;
+    } catch (error) {
+      throw new Error('Kişiler getirilemedi');
+    }
+  },
+
+  async addContact(contact) {
+    try {
+      const { data } = await instance.post('/contacts', contact);
+      return data;
+    } catch (error) {
+      throw new Error('Kişi eklenemedi');
+    }
+  },
+
   async deleteContact(contactId) {
-    const { data } = await axios.delete(`/contacts/${contactId}`);
-    return data;
+    try {
+      const { data } = await instance.delete(`/contacts/${contactId}`);
+      return data;
+    } catch (error) {
+      throw new Error('Kişi silinemedi');
+    }
   },
 };
