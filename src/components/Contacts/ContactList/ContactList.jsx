@@ -5,26 +5,21 @@ import {
   List, 
   ListItem, 
   ListItemText, 
-  ListItemSecondaryAction, 
   IconButton, 
   Paper,
   Typography,
-  Tooltip,
   Box,
-  useTheme,
-  useMediaQuery,
   Avatar,
-  Fade,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   Button,
+  Divider,
   useTheme,
   useMediaQuery
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import PersonIcon from '@mui/icons-material/Person';
 import { useState } from 'react';
 
 export default function ContactList() {
@@ -89,16 +84,14 @@ export default function ContactList() {
                     fontWeight: 500
                   }}
                 />
-                <Tooltip title="Sil" arrow>
-                  <IconButton 
-                    edge="end" 
-                    aria-label="delete"
-                    onClick={() => handleDeleteClick(contact)}
-                    sx={{ ml: 'auto' }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </Tooltip>
+                <IconButton 
+                  edge="end" 
+                  aria-label="delete"
+                  onClick={() => handleDeleteClick(contact)}
+                  sx={{ ml: 'auto' }}
+                >
+                  <DeleteIcon />
+                </IconButton>
               </Box>
             </ListItem>
           ))}
