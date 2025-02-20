@@ -1,12 +1,20 @@
 {
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "https://connections-api.goit.global/api/$1"
+      "dest": "https://connections-api.goit.global/$1"
+    },
+    {
+      "handle": "filesystem"
     },
     {
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ]
+  ],
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist"
 }
