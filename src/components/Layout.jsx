@@ -6,15 +6,17 @@ import { Box, CircularProgress } from '@mui/material';
 
 export default function Layout() {
   return (
-    <Box>
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Navigation />
-      <Suspense fallback={
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-          <CircularProgress />
-        </Box>
-      }>
-        <Outlet />
-      </Suspense>
+      <Box component="main" sx={{ flexGrow: 1, mt: { xs: 7, sm: 8 } }}>
+        <Suspense fallback={
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+            <CircularProgress />
+          </Box>
+        }>
+          <Outlet />
+        </Suspense>
+      </Box>
     </Box>
   );
 }

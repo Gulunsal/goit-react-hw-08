@@ -19,9 +19,20 @@ export default function Navigation() {
   const theme = useTheme();
 
   return (
-    <AppBar position="static">
+    <AppBar 
+      position="fixed" 
+      sx={{ 
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: theme.zIndex.appBar
+      }}
+    >
       <Container maxWidth="lg">
-        <Toolbar sx={{ justifyContent: 'space-between' }}>
+        <Toolbar sx={{ 
+          justifyContent: 'space-between',
+          minHeight: { xs: '56px', sm: '64px' }
+        }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <Button
               component={Link}

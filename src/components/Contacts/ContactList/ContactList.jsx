@@ -11,13 +11,17 @@ import {
   Typography,
   Tooltip,
   Box,
+  useTheme,
+  useMediaQuery,
   Avatar,
   Fade,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-  Button
+  Button,
+  useTheme,
+  useMediaQuery
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PersonIcon from '@mui/icons-material/Person';
@@ -43,7 +47,7 @@ export default function ContactList() {
     setDeleteDialogOpen(false);
   };
 
-  if (contacts.length === 0) {
+  if (!contacts || contacts.length === 0) {
     return (
       <Paper elevation={3} sx={{ p: 3, textAlign: 'center' }}>
         <Typography color="text.secondary">
@@ -56,54 +60,46 @@ export default function ContactList() {
   return (
     <>
       <Paper elevation={3} sx={{ p: 2 }}>
-        <List sx={{ 
-          width: '100%',
-          maxWidth: '100%',
-          bgcolor: 'background.paper',
-          '& .MuiListItem-root': {
-            flexDirection: isMobile ? 'column' : 'row',
-            alignItems: isMobile ? 'flex-start' : 'center',
-            py: isMobile ? 2 : 1
-          }
-        }}>
+        <List>
           {contacts.map((contact) => (
             <ListItem 
               key={contact.id}
               sx={{
                 borderBottom: 1,
-                borderColor: 'divider'
+                borderColor: 'divider',
+                flexDirection: isMobile ? 'column' : 'row',
+                alignItems: isMobile ? 'flex-start' : 'center',
+                py: isMobile ? 2 : 1
               }}
             >
               <Box sx={{ 
                 display: 'flex', 
-                flexDirection: isMobile ? 'column' : 'row',
-                alignItems: isMobile ? 'flex-start' : 'center',
+                alignItems: 'center',
                 width: '100%',
-                gap: 1
+                mb: isMobile ? 1 : 0
               }}>
-                <Avatar sx={{ bgcolor: 'primary.main' }}>
-                  {contact.name[0].toUpperCase()}
+                <Avatar sx={{ bgcolor: 'primary.main', mr: 2 }}>
+                  {contact?.name ? contact.name[0].toUpperCase() : '?'}
                 </Avatar>
                 <ListItemText 
-                  primary={contact.name}
-                  secondary={contact.number}
+                  primary={contact?.name || 'İsimsiz'}
+                  secondary={contact?.number || ''}
                   primaryTypographyProps={{
                     variant: 'subtitle1',
                     fontWeight: 500
                   }}
                 />
-              </Box>
-              <ListItemSecondaryAction>
                 <Tooltip title="Sil" arrow>
                   <IconButton 
                     edge="end" 
                     aria-label="delete"
                     onClick={() => handleDeleteClick(contact)}
+                    sx={{ ml: 'auto' }}
                   >
                     <DeleteIcon />
                   </IconButton>
                 </Tooltip>
-              </ListItemSecondaryAction>
+              </Box>
             </ListItem>
           ))}
         </List>
@@ -120,14 +116,8 @@ export default function ContactList() {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteDialogOpen(false)}>
-            İptal
-          </Button>
-          <Button 
-            onClick={handleConfirmDelete} 
-            color="error" 
-            variant="contained"
-          >
+          <Button onClick={() => setDeleteDialogOpen(false)}>İptal</Button>
+          <Button onClick={handleConfirmDelete} color="error">
             Sil
           </Button>
         </DialogActions>

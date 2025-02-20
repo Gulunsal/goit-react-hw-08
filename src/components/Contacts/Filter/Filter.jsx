@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { setFilter } from '../../../redux/filters/slice';
-import { selectNameFilter } from '../../../redux/filters/slice';
+import { selectNameFilter } from '../../../redux/filters/selectors';
 import { TextField, Box } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
