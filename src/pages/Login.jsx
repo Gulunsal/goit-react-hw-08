@@ -1,10 +1,11 @@
-import React from 'react'
-import LoginForm from "../components/Auth/LoginForm/LoginForm"
+import React from 'react';
+import LoginForm from '../components/Auth/LoginForm/LoginForm';
+import { Container } from '@mui/material';
 
-export default function index() {
+export default function Login() {
   return (
-    <div>
-      <LoginForm/>
-    </div>
-  ) 
+    <Container>
+      <LoginForm />
+    </Container>
+  );
 }

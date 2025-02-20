@@ -1,34 +1,45 @@
 import React from 'react'
-import { NavLink } from 'react-router'
-import { Button, Stack } from '@mui/material'
+import { Link } from 'react-router-dom'
+import { Button, Box } from '@mui/material'
+import PersonAddIcon from '@mui/icons-material/PersonAdd'
+import LoginIcon from '@mui/icons-material/Login'
 
 export default function AuthNav() {
   return (
-    <Stack direction="row" spacing={2}>
+    <Box sx={{ display: 'flex', gap: 1 }}>
       <Button
-        component={NavLink}
-        to="/login"
-        color="inherit"
-        sx={{
-          '&.active': {
-            backgroundColor: 'rgba(255, 255, 255, 0.12)'
-          }
-        }}
-      >
-        Giriş
-      </Button>
-      <Button
-        component={NavLink}
+        component={Link}
         to="/register"
+        variant="outlined"
         color="inherit"
+        startIcon={<PersonAddIcon />}
         sx={{
-          '&.active': {
-            backgroundColor: 'rgba(255, 255, 255, 0.12)'
-          }
+          borderColor: 'rgba(255, 255, 255, 0.5)',
+          '&:hover': {
+            borderColor: 'white',
+            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+          },
         }}
       >
         Kayıt Ol
       </Button>
-    </Stack>
+      
+      <Button
+        component={Link}
+        to="/login"
+        variant="contained"
+        color="secondary"
+        startIcon={<LoginIcon />}
+        sx={{
+          boxShadow: 'none',
+          '&:hover': {
+            boxShadow: 'none',
+            backgroundColor: 'secondary.dark',
+          },
+        }}
+      >
+        Giriş Yap
+      </Button>
+    </Box>
   )
 }

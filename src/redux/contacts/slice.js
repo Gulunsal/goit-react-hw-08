@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addContact, deleteContact, fetchContact } from "./operations";
+import { fetchContacts, addContact, deleteContact } from "./operations";
 import { logout } from "../auth/operations";
 
 const contactsSlice = createSlice({
@@ -11,20 +11,24 @@ const contactsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchContact.pending, (state) => {
+      // Fetch contacts
+      .addCase(fetchContacts.pending, (state) => {
         state.isLoading = true;
+        state.error = null;
       })
-      .addCase(fetchContact.fulfilled, (state, action) => {
+      .addCase(fetchContacts.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = null;
         state.items = action.payload;
       })
-      .addCase(fetchContact.rejected, (state, action) => {
+      .addCase(fetchContacts.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       })
+      // Add contact
       .addCase(addContact.pending, (state) => {
         state.isLoading = true;
+        state.error = null;
       })
       .addCase(addContact.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -35,8 +39,10 @@ const contactsSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload;
       })
+      // Delete contact
       .addCase(deleteContact.pending, (state) => {
         state.isLoading = true;
+        state.error = null;
       })
       .addCase(deleteContact.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -47,7 +53,8 @@ const contactsSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload;
       })
-      .addCase(logout.fulfilled, (state, action) => {
+      // Logout
+      .addCase(logout.fulfilled, (state) => {
         state.items = [];
         state.isLoading = false;
         state.error = null;

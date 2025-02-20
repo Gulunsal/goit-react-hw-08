@@ -1,10 +1,11 @@
-import React from 'react'
-import Registration from "../../components/Auth/RegistrationForm/Registration"
+import React from 'react';
+import RegistrationForm from '../components/Auth/RegistrationForm/RegistrationForm';
+import { Container } from '@mui/material';
 
-export default function index() {
+export default function Registration() {
   return (
-    <div>
-      <Registration/>
-    </div>
-  )
+    <Container>
+      <RegistrationForm />
+    </Container>
+  );
 }

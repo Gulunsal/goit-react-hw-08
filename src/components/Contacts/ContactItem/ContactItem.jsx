@@ -1,8 +1,10 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import {deleteContact} from "../../../redux/contacts/operations";
+import { ListItem, ListItemText, ListItemSecondaryAction, IconButton } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
-export default function ContactItem({ contact }) {
+export default function ContactItem({ contact, onDelete }) {
   const dispatch = useDispatch();
 
   const handleDelete = () => {
@@ -10,10 +12,20 @@ export default function ContactItem({ contact }) {
   };
 
   return (
-    <li>
-      <p>{contact.name}</p>
-      <p>{contact.number}</p>
-      <button onClick={handleDelete}>delete</button>
-    </li>
+    <ListItem>
+      <ListItemText
+        primary={contact.name}
+        secondary={contact.number}
+      />
+      <ListItemSecondaryAction>
+        <IconButton
+          edge="end"
+          aria-label="delete"
+          onClick={() => onDelete(contact.id)}
+        >
+          <DeleteIcon />
+        </IconButton>
+      </ListItemSecondaryAction>
+    </ListItem>
   );
 }

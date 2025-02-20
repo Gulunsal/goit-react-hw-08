@@ -1,56 +1,111 @@
-import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/auth/operations";
-import { useNavigate } from "react-router";
-import { Button, Typography, Stack, Avatar } from '@mui/material';
+import { selectUser } from '../../redux/auth/selectors';
+import { 
+  Button, 
+  Box, 
+  Typography, 
+  Avatar,
+  IconButton,
+  Menu,
+  MenuItem,
+  Divider,
+  ListItemIcon
+} from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { useState } from 'react';
 
 export default function UserMenu() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { user } = useSelector((state) => state.auth);
+  const user = useSelector(selectUser);
+  const [anchorEl, setAnchorEl] = useState(null);
 
-  const handleLogout = async () => {
-    try {
-      await dispatch(logout()).unwrap();
-      navigate("/login");
-    } catch (error) {
-      console.error("Logout error:", error);
-    }
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
   };
 
-  // Avatar için kullanıcı adının baş harfini alma
-  const getInitials = (name) => {
-    return name ? name.charAt(0).toUpperCase() : 'K';  // Eğer isim yoksa 'K' göster
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    handleClose();
   };
 
   return (
-    <Stack direction="row" spacing={2} alignItems="center">
-      <Avatar 
-        sx={{ 
-          bgcolor: 'secondary.main',
-          width: 40,
-          height: 40,
-          fontSize: '1.2rem'
-        }}
-      >
-        {getInitials(user?.name)}
-      </Avatar>
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
       <Typography 
         variant="subtitle1" 
-        color="inherit"
-        sx={{ display: { xs: 'none', sm: 'block' } }}  // Mobilde gizle
+        sx={{ 
+          mr: 2,
+          color: 'white',
+          display: { xs: 'none', sm: 'block' }
+        }}
       >
-        {user?.name || 'Kullanıcı'}
+        {user.name}
       </Typography>
-      <Button 
-        color="inherit"
-        onClick={handleLogout}
-        startIcon={<LogoutIcon />}
-        sx={{ ml: { xs: 1, sm: 2 } }}
+      
+      <IconButton
+        onClick={handleMenu}
+        size="small"
+        sx={{ 
+          p: 0,
+          bgcolor: 'primary.dark',
+          '&:hover': {
+            bgcolor: 'primary.main',
+          }
+        }}
       >
-        Çıkış
-      </Button>
-    </Stack>
+        <Avatar 
+          sx={{ 
+            width: 32, 
+            height: 32,
+            bgcolor: 'secondary.main',
+            fontSize: '1rem'
+          }}
+        >
+          {user.name.charAt(0).toUpperCase()}
+        </Avatar>
+      </IconButton>
+
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        onClick={handleClose}
+        PaperProps={{
+          elevation: 0,
+          sx: {
+            overflow: 'visible',
+            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+            mt: 1.5,
+            '& .MuiAvatar-root': {
+              width: 32,
+              height: 32,
+              ml: -0.5,
+              mr: 1,
+            },
+          },
+        }}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+      >
+        <MenuItem disabled>
+          <ListItemIcon>
+            <AccountCircleIcon fontSize="small" />
+          </ListItemIcon>
+          {user.email}
+        </MenuItem>
+        <Divider />
+        <MenuItem onClick={handleLogout}>
+          <ListItemIcon>
+            <LogoutIcon fontSize="small" />
+          </ListItemIcon>
+          Çıkış Yap
+        </MenuItem>
+      </Menu>
+    </Box>
   );
 }
